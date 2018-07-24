@@ -1,0 +1,47 @@
+PODS:
+  - BlocksKit (2.2.5):
+    - BlocksKit/All (= 2.2.5)
+  - BlocksKit/All (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+    - BlocksKit/MessageUI
+    - BlocksKit/UIKit
+  - BlocksKit/Core (2.2.5)
+  - BlocksKit/DynamicDelegate (2.2.5)
+  - BlocksKit/MessageUI (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+  - BlocksKit/UIKit (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+  - Masonry (1.1.0)
+  - UMCCommon (1.5.1)
+  - UMCPush (3.2.1):
+    - UMCCommon
+  - UMCSecurityPlugins (1.0.6)
+
+DEPENDENCIES:
+  - BlocksKit
+  - Masonry
+  - UMCCommon
+  - UMCPush
+  - UMCSecurityPlugins
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - BlocksKit
+    - Masonry
+    - UMCCommon
+    - UMCPush
+    - UMCSecurityPlugins
+
+SPEC CHECKSUMS:
+  BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  UMCCommon: 16b674e9de0616d3a6128c551348a686d869c3c7
+  UMCPush: 6a56ca259e934043a491283a88b1699596ea1a18
+  UMCSecurityPlugins: 0831a08f3988f3cea9f1d3a7626cd9bee4fef150
+
+PODFILE CHECKSUM: 98b10f5558468a0fafb354833faf118fcf6ae979
+
+COCOAPODS: 1.5.3
