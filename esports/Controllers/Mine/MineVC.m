@@ -23,6 +23,8 @@
 @property (nonatomic, strong) UILabel *nameLbl;
 @property (nonatomic, strong) UILabel *amountLbl;
 @property (nonatomic, strong) UIView *addedView;
+@property (nonatomic, strong) UIImageView *walletIV;
+@property (nonatomic, strong) UIButton *walletBtn;
 
 @property (nonatomic, assign) float originHeight;
 @property (nonatomic, strong) NSString *amount;
@@ -185,7 +187,7 @@
                 layout.font = kNormalFont(16);
             }];
             
-            [UIImageView build:layout config:^(RelativeLayoutParams *params, UIImageView *layout) {
+            self.walletIV = [UIImageView build:layout config:^(RelativeLayoutParams *params, UIImageView *layout) {
                 
                 params.width = WRAP_CONTENT;
                 params.height = WRAP_CONTENT;
@@ -196,7 +198,7 @@
                 layout.image = Image(@"icon_right");
             }];
             
-            [UIButton build:layout config:^(RelativeLayoutParams *params, UIButton *layout) {
+            self.walletBtn = [UIButton build:layout config:^(RelativeLayoutParams *params, UIButton *layout) {
                 
                 params.width = MATCH_PARENT;
                 params.height = MATCH_PARENT;
@@ -230,8 +232,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
-    [[SDImageCache sharedImageCache] clearMemory];
     [self.avatarIV sd_setImageWithURL:[NSURL URLWithString:[AccountManager sharedInstance].account.avatar] placeholderImage:Image(@"placeholder_avatar")];
 }
 
@@ -287,6 +287,9 @@
         
         int status = [userWrapper intForKey:@"status"];
         if (status == 1) {
+            self.walletIV.hidden = YES;
+            self.walletBtn.enabled = NO;
+            
             self.tableView.tableHeaderView.height += 132;
             
             UILabel *statusLbl = [UILabel build:self.addedView config:^(RelativeLayoutParams *params, UILabel *layout) {
@@ -363,6 +366,9 @@
                 }];
             }];
         } else if (status == 2) {
+            self.walletIV.hidden = YES;
+            self.walletBtn.enabled = NO;
+            
             self.tableView.tableHeaderView.height += 190;
             
             [UIView build:self.addedView container:[RelativeLayout layout] config:^(RelativeLayout *container, RelativeLayoutParams *params, UIView *layout) {
@@ -395,6 +401,9 @@
                 }];
             }];
         } else if (status == 3) {
+            self.walletIV.hidden = NO;
+            self.walletBtn.enabled = YES;
+            
             self.tableView.tableHeaderView.height += 46;
             
             [UILabel build:self.addedView config:^(RelativeLayoutParams *params, UILabel *layout) {
@@ -408,6 +417,21 @@
                 layout.textColor = kColorLightGray;
                 layout.font = kNormalFont(14);
             }];
+            
+//            [UILabel build:self.footerView config:^(RelativeLayoutParams *params, UILabel *layout) {
+//
+//                params.width = MATCH_PARENT;
+//                params.height = WRAP_CONTENT;
+//                params.topMargin = 10;
+//                params.leftMargin = 10;
+//                params.rightMargin = 10;
+//                params.bottomMargin = 10;
+//
+//                layout.textColor = kColorBlack;
+//                layout.font = kNormalFont(14);
+//                layout.numberOfLines = 0;
+//                layout.text = @"Mining Instruction\nEvery game stats you played today(0：00-24:00) will be calculate to a HashRate according to EST's algorithm, and these HashRates will be used to mine EST at 1am the next morning. HashRates of the day before yesterday are useless.";
+//            }];
         }
         
         [self.headerView requestLayout];
@@ -486,7 +510,7 @@
                 }
             }
             else {
-                [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+                [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
             }
         }];
     }

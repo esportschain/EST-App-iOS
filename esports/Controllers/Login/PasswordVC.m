@@ -137,7 +137,7 @@
             layout.secureTextEntry = YES;
             NSMutableDictionary *attris = [NSMutableDictionary dictionary];
             attris[NSForegroundColorAttributeName] = kColorGray;
-            layout.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"6-8 numbers or letters" attributes:attris];
+            layout.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"include numbers, letters, special characters" attributes:attris];
             [layout addTarget:self action:@selector(textFieldDidChangeValue:) forControlEvents:UIControlEventEditingChanged];
         }];
         
@@ -187,12 +187,22 @@
             [layout.titleLabel setFont:kNormalFont(16)];
             layout.layer.cornerRadius = 4.0;
             [layout bk_addEventHandler:^(id sender) {
-                ProfileVC *profileVC = [[ProfileVC alloc] init];
-                profileVC.loginVC = self.loginVC;
-                profileVC.emailStr = self.emailStr;
-                profileVC.registerKey = self.registerKey;
-                profileVC.password = self.passwordTF.text;
-                [self.navigationController pushViewController:profileVC animated:YES];
+                if (![self.passwordTF.text isEqualToString:self.confirmTF.text]) {
+                    [MBProgressHUDHelper showError:@"Different passwords." complete:nil];
+                } else if ([self.passwordTF.text length] < 6 || [self.passwordTF.text length] > 16) {
+                    [MBProgressHUDHelper showError:@"The password must be between 6-16 digits, Alphanumeric combination" complete:nil];
+                } else if ([self.confirmTF.text length] < 6 || [self.confirmTF.text length] > 16) {
+                    [MBProgressHUDHelper showError:@"The password must be between 6-16 digits, Alphanumeric combination" complete:nil];
+                } else if (![self isValidPasswordString]) {
+                    [MBProgressHUDHelper showError:@"Your password must contain a mix of numbers, letters and special characters." complete:nil];
+                } else {
+                    ProfileVC *profileVC = [[ProfileVC alloc] init];
+                    profileVC.loginVC = self.loginVC;
+                    profileVC.emailStr = self.emailStr;
+                    profileVC.registerKey = self.registerKey;
+                    profileVC.password = self.passwordTF.text;
+                    [self.navigationController pushViewController:profileVC animated:YES];
+                }
             } forControlEvents:UIControlEventTouchUpInside];
         }];
     }];
@@ -206,13 +216,41 @@
 }
 
 - (void)textFieldDidChangeValue:(id)sender {
-    if (![((UITextField *)sender).text isEqualToString:@""] && [self.passwordTF.text isEqualToString:self.confirmTF.text] && [((UITextField *)sender).text length] >= 6 && [((UITextField *)sender).text length] <= 8) {
+    if (![self.passwordTF.text isEqualToString:@""] && ![self.confirmTF.text isEqualToString:@""]) {
         self.nextBtn.backgroundColor = kColor31B4FF;
         self.nextBtn.enabled = YES;
     } else {
         self.nextBtn.backgroundColor = kColorC3CBCF;
         self.nextBtn.enabled = NO;
     }
+}
+
+-(BOOL)isValidPasswordString {
+    BOOL result = NO;
+    
+    //数字条件
+    NSRegularExpression *tNumRegularExpression = [NSRegularExpression regularExpressionWithPattern:@"[0-9]" options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    //符合数字条件的有几个
+    NSUInteger tNumMatchCount = [tNumRegularExpression numberOfMatchesInString:self.passwordTF.text options:NSMatchingReportProgress range:NSMakeRange(0, [self.passwordTF.text length])];
+    
+    //英文字条件
+    NSRegularExpression *tLetterRegularExpression = [NSRegularExpression regularExpressionWithPattern:@"[A-Za-z]" options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    //符合英文字条件的有几个
+    NSUInteger tLetterMatchCount = [tLetterRegularExpression numberOfMatchesInString:self.passwordTF.text options:NSMatchingReportProgress range:NSMakeRange(0, [self.passwordTF.text length])];
+    
+    //特殊字符条件
+    NSRegularExpression *tSpecialRegularExpression = [NSRegularExpression regularExpressionWithPattern:@"[~!@#$%^&*?_-]" options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    //符合特殊字符条件的有几个
+    NSUInteger tSpecialMatchCount = [tSpecialRegularExpression numberOfMatchesInString:self.passwordTF.text options:NSMatchingReportProgress range:NSMakeRange(0, [self.passwordTF.text length])];
+    
+    if(tNumMatchCount >= 1 && tLetterMatchCount >= 1 && tSpecialMatchCount >= 1){
+        result = YES;
+    }
+    
+    return result;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,6 +10,7 @@
 
 @interface MJRefreshAutoNormalFooter()
 @property (weak, nonatomic) UIActivityIndicatorView *loadingView;
+@property (weak, nonatomic) UILabel *label;
 @end
 
 @implementation MJRefreshAutoNormalFooter
@@ -22,6 +23,19 @@
         [self addSubview:_loadingView = loadingView];
     }
     return _loadingView;
+}
+
+- (UILabel *)label {
+    if (!_label) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kDeviceWidth - 30, 150)];
+        label.textColor = kColorBlack;
+        label.font = kNormalFont(14);
+        label.numberOfLines = 0;
+        label.text = @"Mining Instruction\nEvery game stats you played today(0：00-24:00) will be calculated to a HashRate according to EST's algorithm, and these HashRates will be used to mine EST at 1am the next morning. HashRates of the day before yesterday are useless.";
+
+        [self addSubview:_label = label];
+    }
+    return _label;
 }
 
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)activityIndicatorViewStyle
@@ -49,7 +63,9 @@
         arrowCenterX -= 100;
     }
     CGFloat arrowCenterY = self.mj_h * 0.5;
-    self.loadingView.center = CGPointMake(arrowCenterX, arrowCenterY);
+    self.loadingView.center = CGPointMake(arrowCenterX, 172);
+    
+    self.label.center = CGPointMake(self.mj_w * 0.5, self.mj_h * 0.5 - 22);
 }
 
 - (void)setState:(MJRefreshState)state

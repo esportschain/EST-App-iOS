@@ -133,6 +133,8 @@ didRegisterUserNotificationSettings:
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     //Optional
+    [AccountManager sharedInstance].account.deviceToken = @"0";
+    [[AccountManager sharedInstance] saveAccountInfoToDisk];
     NSLog(@"did Fail To Register For Remote Notifications With Error: %@", error);
 }
 

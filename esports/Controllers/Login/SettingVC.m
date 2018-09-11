@@ -142,6 +142,7 @@
                     params.alignParentRight = YES;
                     params.rightMargin = 38;
                     
+//                    [layout sd_setImageWithURL:[NSURL URLWithString:[AccountManager sharedInstance].account.avatar] placeholderImage:Image(@"placeholder_avatar")];
                     [layout setContentMode:UIViewContentModeScaleAspectFill];
                     layout.layer.masksToBounds = YES;
                     layout.layer.cornerRadius = 20.0;
@@ -168,57 +169,60 @@
                 }];
             }];
             
-            UIButton *pwdBtn = [UIButton build:layout container:[RelativeLayout layout] config:^(RelativeLayout *container, RelativeLayoutParams *params, UIButton *layout) {
-                
-                params.width = MATCH_PARENT;
-                params.height = 60;
-                params.belowOf = avatarBtn;
-                
-                layout.backgroundColor = kColorWhite;
-                [layout bk_addEventHandler:^(id sender) {
-                    ModifyPwdVC *modifyPwdVC = [[ModifyPwdVC alloc] init];
-                    [self.navigationController pushViewController:modifyPwdVC animated:YES];                } forControlEvents:UIControlEventTouchUpInside];
-                
-                [UILabel build:layout config:^(RelativeLayoutParams *params, UILabel *layout) {
-                    
-                    params.width = WRAP_CONTENT;
-                    params.height = WRAP_CONTENT;
-                    params.centerVertical = YES;
-                    params.leftMargin = 15;
-                    
-                    layout.text = @"Password";
-                    layout.textColor = kColorBlack;
-                    layout.font = kNormalFont(16);
-                }];
-                
-                [UIImageView build:layout config:^(RelativeLayoutParams *params, UIImageView *layout) {
-                    
-                    params.width = WRAP_CONTENT;
-                    params.height = WRAP_CONTENT;
-                    params.alignParentRight = YES;
-                    params.centerVertical = YES;
-                    params.rightMargin = 22;
-                    
-                    [layout setImage:Image(@"icon_right")];
-                }];
-                
-                [UIView build:layout config:^(RelativeLayoutParams *params, UIView *layout) {
+            if ([AccountManager sharedInstance].account.isEmailLogin) {
+                [UIButton build:layout container:[RelativeLayout layout] config:^(RelativeLayout *container, RelativeLayoutParams *params, UIButton *layout) {
                     
                     params.width = MATCH_PARENT;
-                    params.height = 1;
-                    params.alignParentBottom = YES;
+                    params.height = 60;
+                    params.belowOf = avatarBtn;
                     
-                    [layout setBackgroundColor:kColorF0F0F0];
+                    layout.backgroundColor = kColorWhite;
+                    [layout bk_addEventHandler:^(id sender) {
+                        ModifyPwdVC *modifyPwdVC = [[ModifyPwdVC alloc] init];
+                        [self.navigationController pushViewController:modifyPwdVC animated:YES];
+                    } forControlEvents:UIControlEventTouchUpInside];
+                    
+                    [UILabel build:layout config:^(RelativeLayoutParams *params, UILabel *layout) {
+                        
+                        params.width = WRAP_CONTENT;
+                        params.height = WRAP_CONTENT;
+                        params.centerVertical = YES;
+                        params.leftMargin = 15;
+                        
+                        layout.text = @"Password";
+                        layout.textColor = kColorBlack;
+                        layout.font = kNormalFont(16);
+                    }];
+                    
+                    [UIImageView build:layout config:^(RelativeLayoutParams *params, UIImageView *layout) {
+                        
+                        params.width = WRAP_CONTENT;
+                        params.height = WRAP_CONTENT;
+                        params.alignParentRight = YES;
+                        params.centerVertical = YES;
+                        params.rightMargin = 22;
+                        
+                        [layout setImage:Image(@"icon_right")];
+                    }];
+                    
+                    [UIView build:layout config:^(RelativeLayoutParams *params, UIView *layout) {
+                        
+                        params.width = MATCH_PARENT;
+                        params.height = 1;
+                        params.alignParentBottom = YES;
+                        
+                        [layout setBackgroundColor:kColorF0F0F0];
+                    }];
                 }];
-            }];
+            }
             
             [UIButton build:layout config:^(RelativeLayoutParams *params, UIButton *layout) {
                 
                 params.width = kDeviceWidth - 28;
                 params.height = 48;
                 params.centerHorizontal = YES;
-                params.belowOf = pwdBtn;
-                params.topMargin = 26;
+                params.belowOf = avatarBtn;
+                params.topMargin = 86;
                 
                 [layout setTitle:@"Logout" forState:UIControlStateNormal];
                 [layout setTitleColor:kColorWhite forState:UIControlStateNormal];
@@ -241,8 +245,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
-    [[SDImageCache sharedImageCache] clearMemory];
     [self.avatarIV sd_setImageWithURL:[NSURL URLWithString:[AccountManager sharedInstance].account.avatar] placeholderImage:Image(@"placeholder_avatar")];
 }
 
@@ -252,7 +254,12 @@
     [AccountManager sharedInstance].account.authKey = @"-1";
     [AccountManager sharedInstance].account.nickname = @"";
     [AccountManager sharedInstance].account.avatar = @"";
+    [AccountManager sharedInstance].account.isEmailLogin = NO;
     [[AccountManager sharedInstance] saveAccountInfoToDisk];
+    
+    [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
+    [[SDImageCache sharedImageCache] clearMemory];
+    
     [theAppDelegate startOver];
 }
 

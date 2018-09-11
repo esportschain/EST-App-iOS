@@ -8,12 +8,16 @@
 
 #import "GameBindVC.h"
 
-@interface GameBindVC ()<WKScriptMessageHandler>
+@interface GameBindVC ()<WKScriptMessageHandler, WKNavigationDelegate>
 
 @property (nonatomic, strong) NSString *urlStr;
 
 @property (nonatomic, strong) UIView *rootLayout;
 @property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) int countDown;
+@property (nonatomic, strong) MBProgressHUD *hud;
+@property (nonatomic, assign) BOOL isOpened;
 
 @end
 
@@ -111,7 +115,42 @@
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
     self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, theAppDelegate.tableViewOffset, kDeviceWidth, kDeviceHeight - theAppDelegate.tableViewOffset - theAppDelegate.bottomOffset) configuration:configuration];
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.urlStr]]];
+    self.webView.navigationDelegate = self;
     [self.view addSubview:self.webView];
+    
+    self.hud = [MBProgressHUDHelper showLoading:@""];
+    
+    //10秒计时器
+    self.countDown = 10;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
+- (void)onTimer {
+    self.countDown--;
+    if (self.countDown == 0) {
+        [self.timer invalidate];
+        self.timer = nil;
+        
+        if (!self.isOpened) {
+            [self.hud hideAnimated:YES];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+}
+
+#pragma mark - WKNavigationDelegate
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
+    [self.hud hideAnimated:YES];
+    self.isOpened = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -203,7 +242,7 @@
                 }
             }
             else {
-                [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+                [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
             }
         }];
     }

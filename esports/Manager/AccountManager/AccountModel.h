@@ -17,5 +17,6 @@
 @property (nonatomic, strong) NSString *nickname;
 @property (nonatomic, strong) NSString *avatar;
 @property (nonatomic, strong) NSString *deviceToken;
+@property (nonatomic, assign) BOOL isEmailLogin;
 
 @end

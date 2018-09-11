@@ -21,6 +21,7 @@
 @property (nonatomic, strong) NSString *gameType;
 @property (nonatomic, assign) int accountStatus;
 @property (nonatomic, strong) NSString *accountMsg;
+@property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *accountName;
 @property (nonatomic, strong) NSMutableDictionary *uriDic;
 

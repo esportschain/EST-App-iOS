@@ -893,12 +893,12 @@
 		D0F73B9320CE68A6001634D0 /* Auto */ = {
 			isa = PBXGroup;
 			children = (
-				D0F73B9420CE68A6001634D0 /* MJRefreshAutoStateFooter.h */,
-				D0F73B9520CE68A6001634D0 /* MJRefreshAutoNormalFooter.h */,
 				D0F73B9620CE68A6001634D0 /* MJRefreshAutoGifFooter.h */,
-				D0F73B9720CE68A6001634D0 /* MJRefreshAutoStateFooter.m */,
 				D0F73B9820CE68A6001634D0 /* MJRefreshAutoGifFooter.m */,
+				D0F73B9520CE68A6001634D0 /* MJRefreshAutoNormalFooter.h */,
 				D0F73B9920CE68A6001634D0 /* MJRefreshAutoNormalFooter.m */,
+				D0F73B9420CE68A6001634D0 /* MJRefreshAutoStateFooter.h */,
+				D0F73B9720CE68A6001634D0 /* MJRefreshAutoStateFooter.m */,
 			);
 			path = Auto;
 			sourceTree = "<group>";

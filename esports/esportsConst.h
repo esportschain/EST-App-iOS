@@ -1,19 +1,20 @@
 //
 //  esportsConst.h
 //  esports
-
-
+//
+//  Created by 焦龙 on 2018/06/11.
+//  Copyright © 2018年 qianqianjie. All rights reserved.
 //
 
 #ifndef esportsConst_h
 #define esportsConst_h
 
-#define MAIN_HOST           @"dev.esportschain.org"    /*www.esportschain.com*/
+#define MAIN_HOST           @"esportschain.org"    /*www.esportschain.com*/
 #define API_ACTION          @"/app.php?"
 #define MAIN_API_URL(path)  [NSString stringWithFormat:@"https://%@%@%@", MAIN_HOST, API_ACTION, path]
 
-#define PUBLIC_KEY          @" "
-#define UMENG_APPKEY        @" "
+#define PUBLIC_KEY          @""
+#define UMENG_APPKEY        @""
 
 #define theAppDelegate      ((AppDelegate*)[[UIApplication sharedApplication] delegate])
 
@@ -37,7 +38,7 @@
 
 #define Image(image)        [UIImage imageNamed:(image)]
 
-
+//配色
 #define kColorWhite         [UIColor whiteColor]
 #define kColorBlack         [UIColor blackColor]
 #define kColorDarkGray      [UIColor darkGrayColor]

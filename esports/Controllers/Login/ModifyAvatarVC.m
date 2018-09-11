@@ -143,7 +143,8 @@
             [layout setTitle:@"Finish" forState:UIControlStateNormal];
             [layout setTitleColor:kColorWhite forState:UIControlStateNormal];
             [layout setTitleColor:kColorWhite forState:UIControlStateHighlighted];
-            layout.backgroundColor = kColor31B4FF;
+            layout.backgroundColor = kColorC3CBCF;
+            layout.enabled = NO;
             [layout.titleLabel setFont:kNormalFont(16)];
             layout.layer.cornerRadius = 4.0;
             [layout bk_addEventHandler:^(id sender) {
@@ -223,7 +224,7 @@
             }
         }
         else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
         }
     }];
 }
@@ -268,6 +269,8 @@
     NSInteger length = [imageData length]/1024;
     NSLog(@"pic length:%ldkb",(long)length);
     [self.avatarIV setImage:image];
+    self.finishBtn.backgroundColor = kColor31B4FF;
+    self.finishBtn.enabled = YES;
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

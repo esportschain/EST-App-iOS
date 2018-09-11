@@ -75,7 +75,7 @@
     [super placeSubviews];
     
     // 状态标签
-    self.stateLabel.frame = self.bounds;
+    self.stateLabel.frame = CGRectMake(self.bounds.origin.x, 150, self.bounds.size.width, 44);
 }
 
 - (void)setState:(MJRefreshState)state

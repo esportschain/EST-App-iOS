@@ -89,7 +89,7 @@
             params.belowOf = titleLbl;
             params.topMargin = 20;
             
-            layout.text = @"exchange your game stats for ESports Token, and minie EST by playing your favourite computer game.";
+            layout.text = @"exchange your game stats for ESports Token, and mine EST by playing your favourite computer game.";
             layout.textColor = kColorGray;
             layout.font = kNormalFont(14);
             layout.numberOfLines = 0;
@@ -284,7 +284,7 @@
             }
         }
         else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
         }
     }];
 }

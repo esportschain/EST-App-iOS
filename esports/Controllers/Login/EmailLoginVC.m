@@ -14,6 +14,9 @@
 @property (nonatomic, strong) UITextField *emailTF;
 @property (nonatomic, strong) UITextField *passwordTF;
 @property (nonatomic, strong) UIButton *nextBtn;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) int countDown;
+@property (nonatomic, strong) MBProgressHUD *hud;
 
 @end
 
@@ -191,7 +194,7 @@
 }
 
 - (void)emailLogin {
-    MBProgressHUD *hud = [MBProgressHUDHelper showLoading:@""];
+    self.hud = [MBProgressHUDHelper showLoading:@""];
     
     //非公共参数字典
     NSMutableDictionary *paramDic = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -240,10 +243,15 @@
     [task.request.params setValue:pwdMD5 forKey:@"pwd"];
     task.request.method = HttpMethodPost;
     
+    //10秒计时器
+    self.countDown = 10;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+    
     [[HttpRequest sharedInstance] execute:task complete:^(HAHttpTask *task) {
-        [hud hideAnimated:YES];
         
         if (task.status == HttpTaskStatusSucceeded) {
+            [self.hud hideAnimated:YES];
+            
             HttpResult* result = (HttpResult*)task.result;
             if (result.code == HTTP_RESULT_SUCCESS) {
                 NSLog(@"uid=%@", [result.data stringForKey:@"uid"]);
@@ -257,6 +265,7 @@
                 [AccountManager sharedInstance].account.authKey = [result.data stringForKey:@"authkey"];
                 [AccountManager sharedInstance].account.nickname = [result.data stringForKey:@"nickname"];
                 [AccountManager sharedInstance].account.avatar = [result.data stringForKey:@"avatar"];
+                [AccountManager sharedInstance].account.isEmailLogin = YES;
                 [[AccountManager sharedInstance] saveAccountInfoToDisk];
                 
                 [self.navigationController popViewControllerAnimated:YES];
@@ -267,10 +276,32 @@
                 [MBProgressHUDHelper showError:result.message complete:nil];
             }
         }
-        else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
-        }
+//        else {
+//            [hud hideAnimated:YES];
+//
+//            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
+//        }
     }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
+- (void)onTimer {
+    self.countDown--;
+    if (self.countDown == 0) {
+        [self.timer invalidate];
+        self.timer = nil;
+        
+        [[HttpRequest sharedInstance] cancelAllTask];
+        [self.hud hideAnimated:YES];
+        [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
+    }
 }
 
 - (void)viewTapped:(UITapGestureRecognizer *)tapGr {
@@ -279,7 +310,7 @@
 }
 
 - (void)textFieldDidChangeValue:(id)sender {
-    if ([self isValidateEmail:self.emailTF.text] && ![self.passwordTF.text isEqualToString:@""]) {
+    if (![self.emailTF.text isEqualToString:@""] && ![self.passwordTF.text isEqualToString:@""]) {
         self.nextBtn.backgroundColor = kColor31B4FF;
         self.nextBtn.enabled = YES;
     } else {

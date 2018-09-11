@@ -16,6 +16,7 @@
 @property (nonatomic, strong) UIButton *finishBtn;
 @property (nonatomic, strong) NSString *idAvatarImagePath;
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
+@property (nonatomic, assign) BOOL isSelected;
 
 @end
 
@@ -246,11 +247,13 @@
     [task.request.params setValue:pwdMD5 forKey:@"new_pwd"];
     [task.request.params setValue:pwdMD5 forKey:@"rnew_pwd"];
     
-    HAFormPostData *imageData = [[HAFormPostData alloc] init];
-    imageData.fileName = @"idAvatarImage.jpg";
-    imageData.contentType = @"image/jpg";
-    imageData.data = UIImageJPEGRepresentation(self.avatarIV.image, .7);
-    [task.request.params setValue:imageData forKey:@"avatar"];
+    if (self.isSelected) {
+        HAFormPostData *imageData = [[HAFormPostData alloc] init];
+        imageData.fileName = @"idAvatarImage.jpg";
+        imageData.contentType = @"image/jpg";
+        imageData.data = UIImageJPEGRepresentation(self.avatarIV.image, .7);
+        [task.request.params setValue:imageData forKey:@"avatar"];
+    }
     
     task.request.method = HttpMethodPost;
     
@@ -268,7 +271,7 @@
             }
         }
         else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
         }
     }];
 }
@@ -313,6 +316,7 @@
     NSInteger length = [imageData length]/1024;
     NSLog(@"pic length:%ldkb",(long)length);
     [self.avatarIV setImage:image];
+    self.isSelected = YES;
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

@@ -25,6 +25,7 @@
     self.gameType = [dataWrapper stringForKey:@"gametype"];
     self.accountStatus = [dataWrapper intForKey:@"account_status"];
     self.accountMsg = [dataWrapper stringForKey:@"account_msg"];
+    self.gameName = [dataWrapper stringForKey:@"name"];
     HADataWrapper *detailWrapper = [dataWrapper dataWrapperForKey:@"detail"];
     self.accountName = [detailWrapper stringForKey:@"accountname"];
     HADataWrapper *uriWrapper = [detailWrapper dataWrapperForKey:@"uri"];

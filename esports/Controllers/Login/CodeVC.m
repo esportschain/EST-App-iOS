@@ -209,6 +209,7 @@
     self.countDown--;
     self.countLbl.text = [NSString stringWithFormat:@"%ds", self.countDown];
     if (self.countDown == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
         [self.timer invalidate];
         self.timer = nil;
     }
@@ -280,7 +281,7 @@
             }
         }
         else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
         }
     }];
 }

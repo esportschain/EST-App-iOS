@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UIView *rootLayout;
 @property (nonatomic, strong) TradeView *tradeView;
 @property (nonatomic, strong) NSString *addStr;
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UILabel *moneyLbl;
 
 @end
 
@@ -130,7 +132,7 @@
     
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 166)];
     
-    UIView *headerView = [UIView build:self.tableView.tableHeaderView container:[RelativeLayout layout] config:^(RelativeLayout *container, RelativeLayoutParams *params, UIView *layout) {
+    self.headerView = [UIView build:self.tableView.tableHeaderView container:[RelativeLayout layout] config:^(RelativeLayout *container, RelativeLayoutParams *params, UIView *layout) {
         
         params.width = MATCH_PARENT;
         params.height = MATCH_PARENT;
@@ -160,14 +162,13 @@
                 layout.font = kBoldFont(14);
             }];
             
-            [UILabel build:layout config:^(RelativeLayoutParams *params, UILabel *layout) {
+            self.moneyLbl = [UILabel build:layout config:^(RelativeLayoutParams *params, UILabel *layout) {
                 
                 params.width = WRAP_CONTENT;
                 params.height = WRAP_CONTENT;
                 params.centerHorizontal = YES;
                 params.centerVertical = YES;
                 
-                layout.text = self.amount;
                 layout.textColor = kColorWhite;
                 layout.font = kNormalFont(32);
             }];
@@ -198,7 +199,7 @@
         }];
     }];
     
-    [headerView requestLayout];
+    [self.headerView requestLayout];
 }
 
 #pragma mark - HATableViewControllerConfig
@@ -231,6 +232,18 @@
 - (RefreshIndicator*)requireRefreshIndicator
 {
     return [super requireRefreshIndicator];
+}
+
+#pragma mark - HAHttpTaskSucceededFilter
+- (void)onHAHttpTaskSucceededFilterExecute:(HAHttpTask*)task
+{
+    [super onHAHttpTaskSucceededFilterExecute:task];
+    
+    HttpResult* result = (HttpResult*)task.result;
+    if (result.code == HTTP_RESULT_SUCCESS) {
+        self.moneyLbl.text = [result.data stringForKey:@"money"];
+        [self.headerView requestLayout];
+    }
 }
 
 - (void)putForward:(NSString *)addStr type:(NSString *)type {
@@ -307,7 +320,7 @@
             }
         }
         else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
         }
     }];
 }

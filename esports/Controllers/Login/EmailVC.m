@@ -223,7 +223,7 @@
             }
         }
         else {
-            [MBProgressHUDHelper showError:@"网络请求失败" complete:nil];
+            [MBProgressHUDHelper showError:@"Connection Failed" complete:nil];
         }
     }];
 }
@@ -233,7 +233,7 @@
 }
 
 - (void)textFieldDidChangeValue:(id)sender {
-    if ([self isValidateEmail:((UITextField *)sender).text]) {
+    if (![((UITextField *)sender).text isEqualToString:@""]) {
         self.nextBtn.backgroundColor = kColor31B4FF;
         self.nextBtn.enabled = YES;
     } else {

@@ -26,7 +26,7 @@
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.mode = MBProgressHUDModeText;
-    hud.label.text = success;
+    hud.detailsLabel.text = success;
     hud.completionBlock = complete;
     [hud hideAnimated:YES afterDelay:1.5];
 }
@@ -35,7 +35,7 @@
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.mode = MBProgressHUDModeText;
-    hud.label.text = error;
+    hud.detailsLabel.text = error;
     hud.completionBlock = complete;
     [hud hideAnimated:YES afterDelay:1.5];
 }

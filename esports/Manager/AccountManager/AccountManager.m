@@ -32,6 +32,7 @@ static AccountManager *sharedInstance;
     [ud setValue:self.account.nickname forKey:@"nickname"];
     [ud setValue:self.account.avatar forKey:@"avatar"];
     [ud setValue:self.account.deviceToken forKey:@"deviceToken"];
+    [ud setBool:self.account.isEmailLogin forKey:@"isEmailLogin"];
     
     [ud synchronize];
     
@@ -47,6 +48,7 @@ static AccountManager *sharedInstance;
     self.account.nickname = [ud objectForKey:@"nickname"];
     self.account.avatar = [ud objectForKey:@"avatar"];
     self.account.deviceToken = [ud objectForKey:@"deviceToken"];
+    self.account.isEmailLogin = [ud boolForKey:@"isEmailLogin"];
 }
 
 @end

@@ -166,13 +166,14 @@
     GameListItemModel *modelItem = (GameListItemModel *)model;
     
     [self.picIV sd_setImageWithURL:[NSURL URLWithString:modelItem.gameIcon] placeholderImage:Image(@"placeholder_avatar")];
-    self.nameLbl.text = modelItem.accountName;
     
     for (id tmpView in [self.addedView subviews]) {
         [tmpView removeFromSuperview];
     }
     
     if (modelItem.accountStatus == 1) {
+        self.nameLbl.text = modelItem.accountName;
+        
         self.inprogLbl.hidden = YES;
         self.bindView.hidden = YES;
         self.compltView.hidden = NO;
@@ -228,6 +229,8 @@
             }
         }];
     } else if (modelItem.accountStatus == 2) {
+        self.nameLbl.text = modelItem.gameName;
+        
         self.inprogLbl.hidden = YES;
         self.bindView.hidden = NO;
         self.compltView.hidden = YES;
@@ -270,10 +273,14 @@
             }];
         }];
     } else if (modelItem.accountStatus == 3) {
+        self.nameLbl.text = modelItem.gameName;
+        
         self.inprogLbl.hidden = NO;
         self.bindView.hidden = YES;
         self.compltView.hidden = YES;
     } else if (modelItem.accountStatus == 4) {
+        self.nameLbl.text = modelItem.gameName;
+        
         self.inprogLbl.hidden = YES;
         self.bindView.hidden = NO;
         self.compltView.hidden = YES;

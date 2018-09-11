@@ -61,7 +61,7 @@
         [self.networkQueue setShowAccurateProgress:YES];
         [self.networkQueue go];
         
-        self.timeOut = 30;
+        self.timeOut = 10;
         self.retryCount = 1;
     }
     
